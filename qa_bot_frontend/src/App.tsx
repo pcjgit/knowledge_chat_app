@@ -48,6 +48,36 @@ function App() {
     }
   };
 
+  const handleIndex = async () => {
+    setIsLoading(true);
+    setError(null);
+    setResponse(null);
+
+    try {
+      const res = await fetch('http://localhost:8000/index', {
+        method: 'POST',
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setResponse({
+        answer: JSON.stringify(data, null, 2),
+        sources: []
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An error occurred while indexing.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
@@ -101,7 +131,7 @@ function App() {
           <button type="button" disabled={isLoading} onClick={handleHealth} style={{ padding: '0.5rem 1rem', fontSize: '1rem' }}>
             Health
           </button>
-          <button type="button" style={{ padding: '0.5rem 1rem', fontSize: '1rem' }}>
+          <button type="button" disabled={isLoading} onClick={handleIndex} style={{ padding: '0.5rem 1rem', fontSize: '1rem' }}>
             Index
           </button>
         </div>
