@@ -8,10 +8,10 @@ POST /index
 POST /chat
 ```
 
-An OpenAI API key is required before running the server:
+A Gemini API key is required before running the server:
 
 ```bash
-export OPENAI_API_KEY="sk-..."
+export GEMINI_API_KEY="..."
 ```
 
 Vector RAG uses the key for final answer generation and embeddings.

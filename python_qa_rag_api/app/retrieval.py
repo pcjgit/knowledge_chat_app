@@ -1,7 +1,7 @@
 import os
 
 from langchain.schema import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from . import indexer
 
@@ -23,10 +23,13 @@ _llm = None
 
 def get_llm():
     global _llm
+    if not os.getenv("GEMINI_API_KEY"):
+        raise RuntimeError("GEMINI_API_KEY is not set in the server environment")
     if _llm is None:
-        _llm = ChatOpenAI(
-            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
-            request_timeout=20,
+        _llm = ChatGoogleGenerativeAI(
+            model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash"),
+            google_api_key=os.getenv("GEMINI_API_KEY"),
+            timeout=20,
             max_retries=1,
         )
     return _llm

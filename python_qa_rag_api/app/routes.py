@@ -18,6 +18,7 @@ def index_docs():
     try:
         files_count, sections_count = build_index()
     except Exception as exc:
+        print(f"Exception during /index: {exc}")
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     return IndexResponse(files_indexed=files_count, sections_indexed=sections_count)
 

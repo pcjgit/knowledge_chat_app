@@ -7,13 +7,15 @@ from pathlib import Path
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 base_path: Path = Path(os.getenv("BASE_PATH", "."))
 
 DOCS_DIR = base_path / "docs"
 INDEX_DIR = base_path / ".kb" / "faiss_index"
-EMBEDDING_MODEL = "text-embedding-3-small"
+EMBEDDING_MODEL = os.getenv("GEMINI_EMBED_MODEL", "gemini-embedding-2")
+if not EMBEDDING_MODEL.startswith("models/"):
+    EMBEDDING_MODEL = f"models/{EMBEDDING_MODEL}"
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 
 # TODO: Configure chunking parameters for traditional RAG.
@@ -43,13 +45,15 @@ def slugify(text: str) -> str:
 
 def get_embeddings():
     global _embeddings
-    if not os.getenv("OPENAI_API_KEY"):
-        raise RuntimeError("OPENAI_API_KEY is not set in the server environment")
+    if not os.getenv("GEMINI_API_KEY"):
+        raise RuntimeError("GEMINI_API_KEY is not set in the server environment")
     if _embeddings is None:
-        _embeddings = OpenAIEmbeddings(
+
+
+
+        _embeddings = GoogleGenerativeAIEmbeddings(
             model=EMBEDDING_MODEL,
-            request_timeout=20,
-            max_retries=1,
+            google_api_key=os.getenv("GEMINI_API_KEY")
         )
     return _embeddings
 
@@ -211,7 +215,9 @@ def load_vector_index(index_dir: Path | None = None) -> tuple[int, int]:
             metadata = json.load(f)
 
         if metadata.get("embedding_model") != EMBEDDING_MODEL:
-            print(f"[vector_rag] Embedding model mismatch: expected {EMBEDDING_MODEL}, found {metadata.get('embedding_model')}", flush=True)
+            print(f"[vector_rag] Embedding model mismatch: expected {EMBEDDING_MODEL}, found {metadata.get('embedding_model')}. Clearing stale index.", flush=True)
+            if index_dir.exists():
+                shutil.rmtree(index_dir)
             return 0, 0
 
         vectorstore = FAISS.load_local(

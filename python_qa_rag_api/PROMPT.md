@@ -35,13 +35,13 @@ Answer these before you start coding:
 
 ## Verification
 
-Before running the server, set your OpenAI API key:
+Before running the server, set your Gemini API key:
 
 ```bash
-export OPENAI_API_KEY="sk-..."
+export GEMINI_API_KEY="..."
 ```
 
-Both strategies use OpenAI for final answer generation. Vector RAG also uses OpenAI embeddings during `/index` and for each `/chat` query.
+Both strategies use Google GenAI for final answer generation. Vector RAG also uses Google GenAI embeddings during `/index` and for each `/chat` query.
 
 Your prototype should pass all of these:
 
