@@ -1,0 +1,5 @@
+{
+  "embedding_model": "models/gemini-embedding-2",
+  "files_indexed": 3,
+  "sections_indexed": 12
+}
