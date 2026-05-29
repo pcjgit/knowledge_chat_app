@@ -1,12 +1,13 @@
 # Knowledge Base Q&A Bot
 
-This project consists of a Knowledge Base Q&A Bot with a Python FastAPI backend and a React frontend.
+This project consists of a Knowledge Base Q&A Bot with multiple Python FastAPI backend options and a React frontend.
 
 ## Project Structure
 
-The repository is organized into two main components:
+The repository is organized into three main components:
 
-- **`python_qa_bot_api/`**: The backend API built with FastAPI. It handles document indexing, retrieval, and integration with the Gemini API for generating answers.
+- **`python_qa_bot_api/`**: A backend API built with FastAPI. It handles document indexing, retrieval, and integration with the Gemini API for generating answers.
+- **`python_qa_rag_api/`**: A backend API built with FastAPI that implements the RAG (Retrieval-Augmented Generation) method for document indexing and retrieval.
 - **`qa_bot_frontend/`**: The frontend application built with React, TypeScript, and Vite. It provides a user interface for asking questions, indexing documents, and checking the system's health.
 
 ## Getting Started
